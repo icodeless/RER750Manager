@@ -1,0 +1,10 @@
+﻿2021/1/19 V1.1.0 [David]
+* Upgrade the version which is same to SDK.
+
+2019/10/1 V1.0.6 [David]
+* 'J'命令加入底下兩個參數：
+	** 'C'(43h)：BUZZER ALWAHYS BEEP
+	** 'D'(44h)：BUZZER OFF
+
+2019/10/1 V1.0.5 [David]
+* Original release
