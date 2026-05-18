@@ -1,0 +1,14 @@
+# Visual Studio / .NET
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+[Bb]uild/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.DS_Store
