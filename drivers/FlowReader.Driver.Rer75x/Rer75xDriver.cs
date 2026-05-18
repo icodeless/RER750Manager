@@ -40,7 +40,7 @@ public sealed class Rer75xDriver :
 
     public Task ConnectAsync(CancellationToken ct)
     {
-        EmitStatus("connected", null);
+        EmitStatus("ready", null);
         return Task.CompletedTask;
     }
 

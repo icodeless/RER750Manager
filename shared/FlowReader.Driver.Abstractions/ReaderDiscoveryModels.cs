@@ -4,7 +4,7 @@ public sealed record ReaderDiscoveryRequest(
     string? BindLocalIp = null,
     int BroadcastPort = 23,
     int TimeoutMs = 1500,
-    int Attempts = 3
+    int Attempts = 6
 );
 
 public sealed record ReaderDiscoveryResult(

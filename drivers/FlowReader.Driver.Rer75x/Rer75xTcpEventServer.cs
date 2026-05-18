@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using FlowReader.Driver.Abstractions;
@@ -13,6 +14,9 @@ internal sealed class Rer75xTcpEventServer : IAsyncDisposable
     private TcpListener? _listener;
     private CancellationTokenSource? _cts;
     private Task? _acceptTask;
+
+    private readonly ConcurrentDictionary<TcpClient, byte> _activeClients = new();
+    private readonly ConcurrentDictionary<Task, byte> _clientTasks = new();
 
     public Action<RawReaderEvent>? OnReaderEvent { get; set; }
     public Action<DriverStatusEvent>? OnStatusChanged { get; set; }
@@ -36,7 +40,7 @@ internal sealed class Rer75xTcpEventServer : IAsyncDisposable
         _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         _acceptTask = Task.Run(() => AcceptLoopAsync(_cts.Token), _cts.Token);
 
-        EmitStatus("connected", null);
+        EmitStatus("listening", null);
         return Task.CompletedTask;
     }
 
@@ -47,11 +51,27 @@ internal sealed class Rer75xTcpEventServer : IAsyncDisposable
         try { _listener?.Stop(); }
         catch { /* ignore stop race */ }
 
+        // Close all active clients
+        foreach (var client in _activeClients.Keys)
+        {
+            try { client.Close(); } catch { }
+        }
+        _activeClients.Clear();
+
         if (_acceptTask != null)
         {
             try { await _acceptTask.WaitAsync(ct); }
             catch { /* ignore shutdown race */ }
         }
+
+        // Wait for client tasks to finish
+        var tasks = _clientTasks.Keys.ToArray();
+        if (tasks.Length > 0)
+        {
+            try { await Task.WhenAll(tasks).WaitAsync(ct); }
+            catch { /* ignore shutdown race */ }
+        }
+        _clientTasks.Clear();
 
         _listener = null;
         EmitStatus("disconnected", null);
@@ -77,7 +97,12 @@ internal sealed class Rer75xTcpEventServer : IAsyncDisposable
                 continue;
             }
 
-            _ = Task.Run(() => ClientLoopAsync(client, ct), ct);
+            _activeClients.TryAdd(client, 0);
+            var task = Task.Run(() => ClientLoopAsync(client, ct), ct);
+            _clientTasks.TryAdd(task, 0);
+
+            // Cleanup task from dictionary when it completes
+            _ = task.ContinueWith(t => _clientTasks.TryRemove(t, out _), CancellationToken.None);
         }
     }
 
@@ -93,6 +118,8 @@ internal sealed class Rer75xTcpEventServer : IAsyncDisposable
                 sourceIp = remote.Address.ToString();
                 sourcePort = remote.Port;
             }
+
+            EmitStatus("push_connected", null);
 
             await using var stream = client.GetStream();
 
@@ -144,7 +171,9 @@ internal sealed class Rer75xTcpEventServer : IAsyncDisposable
         }
         finally
         {
+            _activeClients.TryRemove(client, out _);
             try { client.Close(); } catch { }
+            EmitStatus("push_disconnected", null);
         }
     }
 
