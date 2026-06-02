@@ -271,19 +271,37 @@ namespace GIGATMS.Devices.ER750
 		{
 			ReceivedData?.Invoke(remoteIP, remotePort, dataByte);
 			DeviceStatusFormat deviceState = new DeviceStatusFormat();
-			deviceState.ParseParameter(ref dataByte);
+			try
+			{
+				deviceState.ParseParameter(ref dataByte);
+			}
+			catch (Exception ex)
+			{
+				EventMessage?.Invoke(remoteIP, $"Cannot parse device status: {ex.Message}");
+				return;
+			}
+
 			if (deviceState.ErrorCode == 0)
 			{
 				try
 				{
-					if (!_broadcastDeviceIPCollection.Contains(deviceState.IpAddress)) _broadcastDeviceIPCollection.Add(deviceState.IpAddress);
-					ReceivedDeviceStatus?.Invoke(ref deviceState);
+					if (string.IsNullOrWhiteSpace(deviceState.IpAddress) ||
+						!System.Net.IPAddress.TryParse(deviceState.IpAddress, out _))
+					{
+						deviceState.IpAddress = remoteIP;
+						EventMessage?.Invoke(remoteIP, "Device status IP fallback applied");
+					}
+
+					if (!_broadcastDeviceIPCollection.Contains(deviceState.IpAddress))
+					{
+						_broadcastDeviceIPCollection.Add(deviceState.IpAddress);
+						ReceivedDeviceStatus?.Invoke(ref deviceState);
+					}
 					return;
 				}
 				catch (Exception ex)
 				{
 					ProjectData.SetProjectError(ex);
-					Exception ex2 = ex;
 					ProjectData.ClearProjectError();
 					return;
 				}

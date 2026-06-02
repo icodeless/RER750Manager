@@ -51,7 +51,11 @@ namespace GIGATMS.Devices.ER750.Parameters
 
 		public string MacAddress => _macAddress;
 
-		public string IpAddress => _ipAddress;
+		public string IpAddress
+		{
+			get => _ipAddress;
+			set => _ipAddress = value;
+		}
 
 		public byte CommandCode => _commandCode;
 

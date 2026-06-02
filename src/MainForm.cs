@@ -11,6 +11,7 @@ namespace RER750Manager
     {
         private GIGATMS.Devices.ER750.ER750Lib _er = new GIGATMS.Devices.ER750.ER750Lib();
         private readonly string _debugLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "ER750_Debug.log");
+        private TextBox _uxDebugTextBox;
 
         // Delegates
         private delegate void UpdateUxDeviceListViewCallBack(GIGATMS.Devices.ER750.Parameters.DeviceStatusFormat deviceStatus);
@@ -270,6 +271,19 @@ namespace RER750Manager
         {
             string hexData = dataByteArray != null ? BitConverter.ToString(dataByteArray) : "null";
             LogDebug($"Raw data from {remoteIpAddress}:{remotePort} - {hexData}");
+
+            if (_uxDebugTextBox != null)
+            {
+                string text = $"[{DateTime.Now:HH:mm:ss.fff}] From {remoteIpAddress}:{remotePort} ({dataByteArray?.Length ?? 0} bytes):{Environment.NewLine}{hexData}{Environment.NewLine}{Environment.NewLine}";
+                if (_uxDebugTextBox.InvokeRequired)
+                {
+                    _uxDebugTextBox.Invoke(new Action(() => _uxDebugTextBox.AppendText(text)));
+                }
+                else
+                {
+                    _uxDebugTextBox.AppendText(text);
+                }
+            }
         }
         #endregion
 
@@ -364,6 +378,35 @@ namespace RER750Manager
             uxLedBuzzerControlSelectionList.Items.Add("C- Buzzer always beep");
             uxLedBuzzerControlSelectionList.Items.Add("D- Buzzer off");
             uxLedBuzzerControlSelectionList.SelectedIndex = 0;
+
+            // Programmatic Onscreen Debug Panel
+            var debugPanel = new GroupBox();
+            debugPanel.Text = "Raw UDP Debug Panel";
+            debugPanel.Location = new System.Drawing.Point(955, 25);
+            debugPanel.Size = new System.Drawing.Size(300, 620);
+            
+            var debugTextBox = new TextBox();
+            debugTextBox.Multiline = true;
+            debugTextBox.ScrollBars = ScrollBars.Both;
+            debugTextBox.ReadOnly = true;
+            debugTextBox.Location = new System.Drawing.Point(10, 20);
+            debugTextBox.Size = new System.Drawing.Size(280, 550);
+            debugTextBox.Font = new System.Drawing.Font("Consolas", 9F);
+            
+            var clearBtn = new Button();
+            clearBtn.Text = "Clear Debug Log";
+            clearBtn.Location = new System.Drawing.Point(10, 580);
+            clearBtn.Size = new System.Drawing.Size(280, 30);
+            clearBtn.FlatStyle = FlatStyle.Flat;
+            clearBtn.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            clearBtn.Click += (s, ev) => debugTextBox.Clear();
+            
+            debugPanel.Controls.Add(debugTextBox);
+            debugPanel.Controls.Add(clearBtn);
+            
+            this.Controls.Add(debugPanel);
+            _uxDebugTextBox = debugTextBox;
+            this.Width = 1285; // Expand the window to fit the debug panel
         }
         #endregion
 
