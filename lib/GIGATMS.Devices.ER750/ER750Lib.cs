@@ -22,34 +22,34 @@ namespace GIGATMS.Devices.ER750
 
 		public delegate void ErrorOccuredEventHandler(string source, string errorMessage);
 
-		[CompilerGenerated]
+
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		[AccessedThroughProperty("_udp")]
+
 		private UdpSocket __udp;
 
-		[CompilerGenerated]
+
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		[AccessedThroughProperty("_tcpServer")]
+
 		private TcpServerSocket __tcpServer;
 
-		[CompilerGenerated]
+
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		[AccessedThroughProperty("_tcpClient")]
+
 		private TCPClientSocket __tcpClient;
 
 		private Queue<JobFormat> _batchJobs;
 
-		private Collection _broadcastDeviceIPCollection;
+		private System.Collections.Generic.List<string> _broadcastDeviceIPCollection;
 
 		protected virtual UdpSocket _udp
 		{
-			[CompilerGenerated]
+
 			get
 			{
 				return __udp;
 			}
 			[MethodImpl(MethodImplOptions.Synchronized)]
-			[CompilerGenerated]
+
 			set
 			{
 				UdpSocket.DataReceivedEventHandler obj = _udp_DataReceived;
@@ -69,13 +69,13 @@ namespace GIGATMS.Devices.ER750
 
 		protected virtual TcpServerSocket _tcpServer
 		{
-			[CompilerGenerated]
+
 			get
 			{
 				return __tcpServer;
 			}
 			[MethodImpl(MethodImplOptions.Synchronized)]
-			[CompilerGenerated]
+
 			set
 			{
 				TcpServerSocket.ConnectedEventHandler obj = _tcpServer_Connected;
@@ -101,13 +101,13 @@ namespace GIGATMS.Devices.ER750
 
 		protected virtual TCPClientSocket _tcpClient
 		{
-			[CompilerGenerated]
+
 			get
 			{
 				return __tcpClient;
 			}
 			[MethodImpl(MethodImplOptions.Synchronized)]
-			[CompilerGenerated]
+
 			set
 			{
 				TCPClientSocket.ConnectedEventHandler obj = _tcpClient_Connected;
@@ -178,7 +178,7 @@ namespace GIGATMS.Devices.ER750
 			_tcpServer = new TcpServerSocket();
 			_tcpClient = new TCPClientSocket();
 			_batchJobs = new Queue<JobFormat>();
-			_broadcastDeviceIPCollection = new Collection();
+			_broadcastDeviceIPCollection = new System.Collections.Generic.List<string>();
 		}
 
 		public void Broadcast()
@@ -276,7 +276,7 @@ namespace GIGATMS.Devices.ER750
 			{
 				try
 				{
-					_broadcastDeviceIPCollection.Add(deviceState.IpAddress, deviceState.IpAddress);
+					if (!_broadcastDeviceIPCollection.Contains(deviceState.IpAddress)) _broadcastDeviceIPCollection.Add(deviceState.IpAddress);
 					ReceivedDeviceStatus?.Invoke(ref deviceState);
 					return;
 				}
@@ -352,7 +352,7 @@ namespace GIGATMS.Devices.ER750
 			{
 				ProjectData.SetProjectError(ex);
 				Exception ex2 = ex;
-				Interaction.MsgBox(ex2.Message);
+				Console.WriteLine(ex2.Message);
 				ProjectData.ClearProjectError();
 			}
 		}
@@ -375,7 +375,7 @@ namespace GIGATMS.Devices.ER750
 			{
 				ProjectData.SetProjectError(ex);
 				Exception ex2 = ex;
-				Interaction.MsgBox(ex2.Message);
+				Console.WriteLine(ex2.Message);
 				ProjectData.ClearProjectError();
 			}
 		}
@@ -391,8 +391,8 @@ namespace GIGATMS.Devices.ER750
 					{
 					case E_Jobs.E00_ConnectToReader:
 					{
-						string[] col = Strings.Split(Conversions.ToString(job.Parameter), ":");
-						ConnectToReader(col[0], (int)Math.Round(Conversion.Val(col[1])));
+						string[] col = Conversions.ToString(job.Parameter).Split(new string[] { ":" }, StringSplitOptions.None);
+						ConnectToReader(col[0], (int)Math.Round(Convert.ToDouble(col[1])));
 						break;
 					}
 					case E_Jobs.E01_SendOpenDoorCommand:

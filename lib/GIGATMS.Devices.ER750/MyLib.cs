@@ -17,9 +17,9 @@ namespace GIGATMS.Devices.ER750
 				{
 					do
 					{
-						long i = (long)Conversion.Int((double)Number / 16.0);
+						long i = (long)Math.Truncate((double)Number / 16.0);
 						long r = Number - i * 16;
-						h = Conversion.Hex(r) + h;
+						h = Convert.ToString(Convert.ToInt32(r), 16).ToUpper() + h;
 						Number = i;
 					}
 					while (Number > 0);
@@ -33,12 +33,13 @@ namespace GIGATMS.Devices.ER750
 				{
 					checked
 					{
-						string numberHex = Strings.Right("00000000" + LongHex(Number), 2 * Length);
-						int hexLength = Strings.Len(numberHex);
+						string tempHex = "00000000" + LongHex(Number);
+							string numberHex = tempHex.Substring(Math.Max(0, tempHex.Length - 2 * Length));
+						int hexLength = numberHex.Length;
 						int num = hexLength;
 						for (int i = 1; i <= num; i += 2)
 						{
-							byteArray[(int)Math.Round((double)startIndex + (double)(i - 1) / 2.0)] = (byte)Math.Round(Conversion.Val("&H" + Strings.Mid(numberHex, hexLength - i, 2)));
+							byteArray[(int)Math.Round((double)startIndex + (double)(i - 1) / 2.0)] = (byte)Math.Round(Convert.ToDouble(Convert.ToInt32(numberHex.Substring(hexLength - i - 1, 2), 16)));
 						}
 						return true;
 					}
@@ -63,7 +64,7 @@ namespace GIGATMS.Devices.ER750
 						int num = endIndex;
 						for (int i = startIndex; i <= num && ((byteArray[i] >= 20) & (byteArray[i] <= 127)); i++)
 						{
-							dataString += Conversions.ToString(Strings.Chr(byteArray[i]));
+							dataString += Conversions.ToString(Convert.ToChar(byteArray[i]));
 						}
 						return dataString;
 					}
@@ -215,7 +216,7 @@ namespace GIGATMS.Devices.ER750
 					int num = byteArray.Length - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						hexString += Conversion.Hex(byteArray[i]).PadLeft(2, '0');
+						hexString += Convert.ToString(Convert.ToInt32(byteArray[i]), 16).ToUpper().PadLeft(2, '0');
 					}
 					return hexString;
 				}

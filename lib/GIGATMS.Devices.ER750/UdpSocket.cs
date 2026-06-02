@@ -101,7 +101,7 @@ namespace GIGATMS.Devices.ER750
 			{
 				foreach (IPAddress ip in addressList)
 				{
-					if (Strings.InStr(ip.ToString(), ":") == 0)
+					if (ip.ToString().IndexOf(":") + 1 == 0)
 					{
 						localIPs = (string[])Utils.CopyArray(localIPs, new string[ipCount + 1]);
 						localIPs[ipCount] = ip.ToString();

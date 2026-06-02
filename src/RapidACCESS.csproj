@@ -1,25 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net4.8</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>RER750Manager</RootNamespace>
     <AssemblyName>RapidACCESS</AssemblyName>
-    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+    <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>RER750Manager.Program</StartupObject>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <!-- Assuming GIGATMS.Devices.ER750.ER750Lib is an external DLL -->
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\app.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\RER750Lib.csproj" />
   </ItemGroup>

@@ -54,7 +54,7 @@ namespace GIGATMS.Devices.ER750.Parameters
 
 		public string DeviceName => Conversions.ToString(MyLib.Encoding.GetString(_deviceNameByteArray));
 
-		public string XID => Conversion.Hex(_xidByteArray);
+		public string XID => BitConverter.ToString(_xidByteArray).Replace("-", "").ToUpper();
 
         private Dictionary<string, string> _deviceNameCache = new Dictionary<string, string>(); //Halim
 
