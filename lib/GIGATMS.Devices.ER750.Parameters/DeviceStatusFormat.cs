@@ -93,7 +93,7 @@ namespace GIGATMS.Devices.ER750.Parameters
 					_ipAddress = Conversions.ToString(parameterByteArray[5]) + "." + Conversions.ToString(parameterByteArray[6]) + "." + Conversions.ToString(parameterByteArray[7]) + "." + Conversions.ToString(parameterByteArray[8]);
 					break;
 				case 4:
-					_macAddress = Conversion.Hex(parameterByteArray[14]).PadLeft(2, '0') + "." + Conversion.Hex(parameterByteArray[13]).PadLeft(2, '0') + "." + Conversion.Hex(parameterByteArray[12]).PadLeft(2, '0') + "." + Conversion.Hex(parameterByteArray[11]).PadLeft(2, '0') + "." + Conversion.Hex(parameterByteArray[10]).PadLeft(2, '0') + "." + Conversion.Hex(parameterByteArray[9]).PadLeft(2, '0');
+					_macAddress = Convert.ToString(Convert.ToInt32(parameterByteArray[14]), 16).ToUpper().PadLeft(2, '0') + "." + Convert.ToString(Convert.ToInt32(parameterByteArray[13]), 16).ToUpper().PadLeft(2, '0') + "." + Convert.ToString(Convert.ToInt32(parameterByteArray[12]), 16).ToUpper().PadLeft(2, '0') + "." + Convert.ToString(Convert.ToInt32(parameterByteArray[11]), 16).ToUpper().PadLeft(2, '0') + "." + Convert.ToString(Convert.ToInt32(parameterByteArray[10]), 16).ToUpper().PadLeft(2, '0') + "." + Convert.ToString(Convert.ToInt32(parameterByteArray[9]), 16).ToUpper().PadLeft(2, '0');
 					break;
 				case 5:
 					_firmwareVersion = parameterByteArray[18] + "." + parameterByteArray[17] + "." + parameterByteArray[16] + "." + parameterByteArray[15];

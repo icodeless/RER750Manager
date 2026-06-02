@@ -433,14 +433,14 @@ namespace RER750Manager
             {
                 switch (uxStartListen.Text)
                 {
-                    case "Start Listening":
+                    case "▶ Start Listening":
                         _er.StartListen(uxLocalIps.Text, (ushort)uxListenPort.Value);
-                        uxStartListen.Text = "Stop Listening";
+                        uxStartListen.Text = "⏹ Stop Listening";
                         LogDebug("Started listening for device data");
                         break;
-                    case "Stop Listening":
+                    case "⏹ Stop Listening":
                         _er.StopListen();
-                        uxStartListen.Text = "Start Listening";
+                        uxStartListen.Text = "▶ Start Listening";
                         LogDebug("Stopped listening for device data");
                         break;
                     default:

@@ -78,6 +78,8 @@ namespace RER750Manager
             this.Button1.TabIndex = 1;
             this.Button1.Text = "Broadcast";
             this.Button1.UseVisualStyleBackColor = true;
+            this.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button1.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.Button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // uxFormInitializeTimer
@@ -121,8 +123,10 @@ namespace RER750Manager
             this.uxStartListen.Name = "uxStartListen";
             this.uxStartListen.Size = new System.Drawing.Size(241, 38);
             this.uxStartListen.TabIndex = 5;
-            this.uxStartListen.Text = "Start Listening";
+            this.uxStartListen.Text = "▶ Start Listening";
             this.uxStartListen.UseVisualStyleBackColor = true;
+            this.uxStartListen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.uxStartListen.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.uxStartListen.Click += new System.EventHandler(this.uxStartListen_Click);
             // 
             // uxLocalIps
@@ -232,6 +236,8 @@ namespace RER750Manager
             this.Button5.TabIndex = 11;
             this.Button5.Text = "Control LED/Buzzer";
             this.Button5.UseVisualStyleBackColor = true;
+            this.Button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button5.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.Button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // GroupBox3
@@ -253,8 +259,10 @@ namespace RER750Manager
             this.Button3.Name = "Button3";
             this.Button3.Size = new System.Drawing.Size(219, 38);
             this.Button3.TabIndex = 11;
-            this.Button3.Text = "Open Door";
+            this.Button3.Text = "🚪 Open Door";
             this.Button3.UseVisualStyleBackColor = true;
+            this.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button3.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.Button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // Label5
@@ -339,6 +347,8 @@ namespace RER750Manager
             this.Button4.TabIndex = 12;
             this.Button4.Text = "&Exit";
             this.Button4.UseVisualStyleBackColor = true;
+            this.Button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button4.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.Button4.Click += new System.EventHandler(this.Button4_Click);
             // 
             // uxEventMessageListView
@@ -370,6 +380,8 @@ namespace RER750Manager
             this.Button2.TabIndex = 15;
             this.Button2.Text = "Clear Event Message";
             this.Button2.UseVisualStyleBackColor = true;
+            this.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button2.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.Button2.Click += new System.EventHandler(this.Button2_Click_1);
             // 
             // Button6
@@ -380,6 +392,8 @@ namespace RER750Manager
             this.Button6.TabIndex = 16;
             this.Button6.Text = "Clear Received Data";
             this.Button6.UseVisualStyleBackColor = true;
+            this.Button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button6.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.Button6.Click += new System.EventHandler(this.Button6_Click_1);
             // 
             // Button7
@@ -390,6 +404,8 @@ namespace RER750Manager
             this.Button7.TabIndex = 17;
             this.Button7.Text = "Batch Command";
             this.Button7.UseVisualStyleBackColor = true;
+            this.Button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Button7.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.Button7.Click += new System.EventHandler(this.Button7_Click);
             // 
             // uxOpenDoorTimer

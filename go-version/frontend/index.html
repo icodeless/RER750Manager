@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RER750 Web Manager</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #2c3e50; }
+        .panel { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .panel h2 { margin-top: 0; font-size: 1.2em; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        button { background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 1em; margin-right: 5px; margin-bottom: 5px; }
+        button:hover { background: #2980b9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
+        th { background: #fafafa; }
+        select, input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .controls { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RER750 Web Manager</h1>
+
+        <div class="panel">
+            <h2>Device Search</h2>
+            <button onclick="searchDevices()">🔍 Search Readers</button>
+            <table id="deviceTable">
+                <thead><tr><th>IP</th><th>MAC</th><th>Version</th><th>Name</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="panel">
+            <h2>Data Stream</h2>
+            <button onclick="startListening()">▶ Start Listening</button>
+            <button onclick="stopListening()">⏹ Stop Listening</button>
+            <button onclick="clearEvents()">🗑 Clear List</button>
+            <table id="eventTable">
+                <thead><tr><th>IP</th><th>Date/Time</th><th>Event Data</th><th>Device Name</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="panel controls">
+            <h2>Control</h2>
+            <label>Selected Device IP: <input type="text" id="targetIp" placeholder="192.168.x.x"></label><br><br>
+            <button onclick="openDoor()">🚪 Open Door</button>
+
+            <select id="ledBuzzerAction">
+                <option value="0">0 - Turn LED off</option>
+                <option value="1">1 - Green on</option>
+                <option value="5">5 - 1 Beep</option>
+            </select>
+            <button onclick="setLedBuzzer()">💡 Set LED/Buzzer</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+
+        function searchDevices() {
+            fetch(`${API_BASE}/search`, { method: 'POST' });
+        }
+
+        function startListening() {
+            fetch(`${API_BASE}/listen/start`, { method: 'POST' });
+        }
+
+        function stopListening() {
+            fetch(`${API_BASE}/listen/stop`, { method: 'POST' });
+        }
+
+        function clearEvents() {
+            document.querySelector('#eventTable tbody').innerHTML = '';
+        }
+
+        function openDoor() {
+            const ip = document.getElementById('targetIp').value;
+            if (ip) fetch(`${API_BASE}/opendoor?ip=${ip}`, { method: 'POST' });
+        }
+
+        function setLedBuzzer() {
+            const ip = document.getElementById('targetIp').value;
+            const action = document.getElementById('ledBuzzerAction').value;
+            if (ip) fetch(`${API_BASE}/ledbuzzer?ip=${ip}&action=${action}`, { method: 'POST' });
+        }
+
+        setInterval(() => {
+            fetch(`${API_BASE}/devices`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#deviceTable tbody');
+                    tbody.innerHTML = data.map(d => `<tr onclick="document.getElementById('targetIp').value='${d.ip}'" style="cursor:pointer"><td>${d.ip}</td><td>${d.mac}</td><td>${d.version}</td><td>${d.name}</td></tr>`).join('');
+                });
+        }, 2000);
+
+        setInterval(() => {
+            fetch(`${API_BASE}/events`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#eventTable tbody');
+                    tbody.innerHTML = data.map(e => `<tr><td>${e.ip}</td><td>${e.timestamp}</td><td>${e.data}</td><td>${e.name}</td></tr>`).join('');
+                });
+        }, 2000);
+    </script>
+</body>
+</html>
